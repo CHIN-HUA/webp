@@ -1,0 +1,22 @@
+html{
+    font-size : 14px;
+    background-color: rgb(164, 48, 231);
+  }
+  @media (max-width : 600px){
+    html{
+      font-size : 10px;
+      background : rgb(48, 45, 218);
+    }
+  }
+  @media (max-width : 800px){
+    html{
+      font-size : 20px;
+      background : rgb(255, 248, 44);
+    }
+  }
+  @media (max-width : 1000px){
+    html{
+      font-size : 6px;
+      background : rgb(5, 160, 221);
+    }
+  }
