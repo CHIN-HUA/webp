@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<style>
+/* 2.設定盒子大小 居中 */
+.box{
+width:500px;
+height:500px;
+border:1px solid black;
+margin:20px auto;
+
+text-align: center;
+}
+</style>
+
+<script>
+// 3.window載入
+window.onload = function(){
+
+// 4.獲取元素資訊
+var oDiv = document.getElementById("div1");
+
+// 5.建立變數，接收星星
+var sStr = "";
+
+// 6 遍歷 迴圈 每行出星星
+for(var i=0;i<20;i++){
+
+for(var j=0;j<i;j++){
+sStr += "*";
+}
+
+sStr +="<br>";
+}
+
+// 7.遍歷 迴圈之外 改變盒子內部內容
+oDiv.innerHTML = sStr;
+
+
+
+
+}
+</script>
+
+</head>
+<body>
+<!-- 1.搭建盒子，建立框架 -->
+<div class="box" id="div1"></div>
+</body>
+</html>
