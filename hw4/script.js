@@ -4,7 +4,6 @@ var points = 0;
 
 $(document).ready(function(){
 
-/*	Select the text input with jQuery and add an event handler that checks the input against the words in the game*/
 	var $answerBox = $('#answer');
 
 	$answerBox.keyup(function(){
@@ -19,16 +18,12 @@ $(document).ready(function(){
 		return false;
 	});
 
-/*	Create the game area, add first one to the area and then start running the game*/
  	createGameArea();
  	addWordToGame();
  	runGame();
 
  });
 
-/*Selects the div "gamearea" with jQuery and adds 200 divs with the class "square" into it.
-Each square has a unique id number ranging from 1 to 200. These are used to locate the squares. Each row has 20 squares and there are 10 rows
-TO-DO: Contain each row inside its own div*/
 
 function createGameArea(){
 
@@ -43,11 +38,6 @@ function createGameArea(){
 }
 
 
-/*Adds a new word to the top row at random location. The divs with the letters of that row are given a class named after that word.
-Checks if the word is already in the game and if it is, it selects another random word until there isn't to prevent duplicates.
-Adds the new word to array wordsVisible, which holds all the words visible in the game at that moment.
-Also, if there is no space available for the word at the random location, it will try another location for 15 times after which it gives up and returns false.
-TO-DO: Check whether there is any duplicate code with detectCollision and if there is, make this function use that instead*/
  function addWordToGame(){
 
 	var word;
@@ -89,8 +79,6 @@ TO-DO: Check whether there is any duplicate code with detectCollision and if the
  	}
  }
 
-/*Moves the word passed as argument one row down if there is room. Function detectCollision is used to check whether there is.
-If there is room below, the squares now attended are made empty, their class based on the word is removed and those are added to square divs one row below.*/
  function descendWord(wordToMove){
  	var $wordToMove = $('.' + wordToMove);
 	
@@ -115,7 +103,6 @@ If there is room below, the squares now attended are made empty, their class bas
  	
  }
 
-/*Checks whether the squares below the given word are all empty. Returns true if they are and false if they aren't.*/
  function detectCollision($wordToMove){
  	var collisions = [];
 
@@ -137,8 +124,7 @@ If there is room below, the squares now attended are made empty, their class bas
 	}
  }
 
-/*Runs the game. Adds a new word and moves existing ones down every second(or whatever the interval is set to). 
-If addWordTogame returns false, then the intervalID is cleared, answerBox is disabled and the game ends.*/
+
 function runGame(){
 
 	var intervalID = window.setInterval(function(){
@@ -161,9 +147,6 @@ function runGame(){
 	}, 1200);
 }
 
-/*If the parameter word is found in the array wordsVisible, it is deleted from the gamearea and the array.
-Also the class based on the word in square divs is removed.
-If the word is found, calculatePoints(word) is called to add points for the in question.*/
 function deleteWord(word){
 	
 	if(wordsVisible.indexOf(word) === -1){
@@ -186,7 +169,6 @@ function deleteWord(word){
 	}
 }
 
-/*Adds points based on the length of the word*/
 function calculatePoints(word){
 
 	points += word.length;
