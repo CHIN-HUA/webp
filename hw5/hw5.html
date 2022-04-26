@@ -1,153 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>liechebiao.html</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="css/jquery.mobile-1.4.3.css">
-<script src="js/jquery-1.11.1.js"></script>
-<script src="js/jquery.mobile-1.4.3.js"></script>
-<style>
-#btn{background-color:rgba(255,255,255,0.3);color:#ccc;}
-#back{display:block;margin:0 auto;}
-</style>
-<script>
-var url1 = "https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/FirstLastTimetable/TRTC?%24top=30&%24format=JSON";//通过发车站和终点站查询
-var url2 = "https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/ODFare/TRTC?%24top=30&%24format=JSON";//通过车次来查询
-var url3 = "https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/S2STravelTime/TRTC?%24top=30&%24format=JSON";
-//请求加载详情：
-var isAjax=false; //ajax使用小技巧
-function city(Id){
-$.mobile.loading("show"); //加载图标显示出来
-if(isAjax) return; //如果为true，则正在加载，再点击多次都不会执行。
-isAjax=true; //开始之前设为true
-$.ajax({
-type:'get',
-url:url3,
-data:{TrainCode:$("#num"+Id).text()},
-timeout:30000,
-success:function(data){
-isAjax=false; //加载成功后设为false，此时又开始加载了
-var info=$(data).find("TrainDetailInfo");
-var trip="";
-for(var i in info){ //解析xml文件
-trip+='<tr><td>'+$(info).eq(i).find("TrainStation").text()+'</td><td>'+$(info).eq(i).find("StartTime").text()+'</td><td>'+$(info).eq(i).find("ArriveTime").text()+'</td></tr>'
-$("#table").find("tbody").empty().append(trip);
-
-}
-$.mobile.changePage("#index1"); //跳转到下一个页面
-$.mobile.loading("hide"); //加载的图标隐藏起来
-
-}
-});
-
-}
-
-$(document).on("pageinit","#index",function(){//页面初始化之后
-$("#search_btn").on("click",function(){ //发送请求之前先校验
-if($("#start").val()&&$("#end").val()||$("#num").val()){
-var btn=$(this);
-btn.button("option","disable",true);//设置搜索按钮不可再次点击
-$.mobile.loading("show"); //设置加载图标显示
-var url=url2 //默认url为url2，先判断再发送请求
-var data={};
-if($("#num").val()){ //如果填了车此次信息，就加在url2，
-var data={TrainCode:$("#num").val()};
-}
-else{ //如果没填了车此次信息，就加在url1
-var url=url1
-var data={StartStation:$("#start").val(),ArriveStation:$("#end").val()};
-}
-$.ajax({
-url:url,
-type:'get',
-data:data,
-success:function(data){
-
-var timeTables = $(data).find("TimeTable");
-var detail="";
-for(var i=0;i<timeTables.length;i++){
-if(i>10) //第10条信息后面的就不要了
-return false;
-
-if(timeTables.find("FirstStation").text()=="数据没有被发现"){
-alert("数据没有被发现");
-return false;
-}
-
-detail+='<li><a href="###" onclick="city('+i+')" id="num'+i+'">'+$(timeTables).eq(i).find("TrainCode").text()+'</a><span>'+$(timeTables).eq(i).find("StartStation").text()+'--</span><span>'+$(timeTables).eq(i).find("ArriveStation").text()+'</span><br><span>'+$(timeTables).eq(i).find("StartTime").text()+'--</span><span>'+$(timeTables).eq(i).find("ArriveTime").text()+'</span><br><span>用时：'+$(timeTables).eq(i).find("UseDate").text()+'</span></li>';
-
-$("#list").html(detail);
-$("#list").listview("refresh");
-$.mobile.loading("hide");
-btn.button("option","disable",false);
-}
-}
-});
-
-}else{
-alert("请输入出发站和终点站或者输入车次！");
-}
-});
-
-
-});
-</script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hw5</title>
+    <link href="hw5.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 </head>
+
 <body>
-<div data-role="page" id="index">
-<div data-role="header" data-position="fixed">
-<h1>列车时刻表查询</h1>
-</div>
-<div role="main" class="ui-content">
-<form action="###" methor="post" id="car_form">
-<div class="ui-field-contain">
-<label for="start">捷運首末班車時刻表資料</label>
-<input type="text" name="start" id="start">
-</div>
-<div class="ui-field-contain">
-<label for="end">捷運起迄站間票價資料</label>
-<input type="text" name="end" id="end">
-</div>
-<div class="ui-field-contain">
-<label for="num">取得捷運列車站間運行時間資料</label>
-<input type="text" name="num" id="num">
-</div>
-</form>
-<input type="submit" value="搜索" id="search_btn">
-<ul data-role="listview" data-inset="true" id="list"></ul>
-</div>
-<div data-role="footer" data-position="fixed">
-<div data-role="navbar">
-<ul>
-<li><a href="#index1" data-icon="grid" class="ui-btn-active">查询</a></li>
-<li><a href="javascript:void(0)" data-icon="star">收藏</a></li>
-<li><a href="javascript:void(0)" data-icon="gear">设置</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-<div data-role="page" id="index1">
-<div data-role="header" data-position="fixed">
-<h1>列车时刻表查询</h1>
-</div>
-<div role="main" class="ui-icon">
-<table data-role="table" data-mode="reflow" class="ui-responsive table-stroke" id="table">
-<thead>
-<tr>
-<th>站点</th>
-<th>到站时间</th>
-<th>出发时间</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-</div>
-<div data-role="footer" data-position="fixed">
-<a href="#" class="ui-btn ui-corner-all" data-rel="back" id="back">返回</a>
-</div>
+<div class="container">
+    <div style=" text-align: center;">
+    <label for="start">起始站:</label>
+    <select id="start">
+        
+    </select>
+    <label for="end">終點站：</label>
+    <select id="end">
+    </select>
+    <button id="send">查詢價格</button>
+    <p id="price">價格： </p>
+    </div>
+<div class="row">
+    <div class="col-3">
+        <div class="start station " id="stop1">台北車站</div>
+        <span class="verticalLine" id="1">&#129047;5分</span>
+    </div>
+    <div class="col-3">
+        <div class="station" id="stop2">三重站</div>
+        <span class="verticalLine" id="2">&#129047;6分</span>
+    </div>
+    <div class="col-3">
+        <div class="station" id="stop3">新北產業園區站</div>
+        <span class="verticalLine" id="3">&#129047;5分30秒</span>
+    </div>
+    <div class="col-3">
+        <div class="station" id="stop4">新莊副都心站</div>
+        <div class="verticalLine" id="4">&#129047;4分30秒</div>
+    </div>
 </div>
 </body>
+<script src="hw5.js"></script>
+
 </html>
