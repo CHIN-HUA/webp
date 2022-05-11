@@ -1,6 +1,6 @@
 $("#test").on("click",function(){
-  
-  var myList = document.getElementById('myList');
+
+var myList = document.getElementById('myList');
 myList.addEventListener('click', function(e) {
   if ( e.target.tagName.toLowerCase() === 'li' ) {
     console.log(e.target.textContent);
